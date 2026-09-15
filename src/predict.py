@@ -1,4 +1,27 @@
-def predict_message(message, vectorizer, model, threshold):
+import json
+import joblib
+from pathlib import Path
+
+
+CURRENT_FILE = Path(__file__).resolve()
+PROJECT_ROOT = CURRENT_FILE.parent.parent
+MODELS_DIR = PROJECT_ROOT / "models"
+
+VECTORIZER_PATH = MODELS_DIR / "char_tfidf.joblib"
+MODEL_PATH = MODELS_DIR / "logistic_regression.joblib"
+METADATA_PATH = MODELS_DIR / "metadata.json"
+
+vectorizer = joblib.load(VECTORIZER_PATH)
+model = joblib.load(MODEL_PATH)
+
+with open(METADATA_PATH, "r") as file:
+    metadata = json.load(file)
+
+threshold = metadata["threshold"]
+
+
+
+def predict_message(message):
     message_vector = vectorizer.transform([message])
 
     spam_probability = model.predict_proba(
@@ -21,4 +44,11 @@ def predict_message(message, vectorizer, model, threshold):
         "label": label
     }
 
+
+if __name__ == "__main__":  # dunder 
+    result = predict_message(
+        "Congratulations! You have won a free prize. Call now to claim."
+    )
+
+    print(result)
 
