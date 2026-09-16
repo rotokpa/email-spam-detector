@@ -55,3 +55,41 @@ def test_predict_missing_message():
     )
 
     assert response.status_code == 422
+
+
+def test_predict_empty_message():
+    response = client.post(
+        "/predict",
+        json={
+            "message": ""
+        }
+    )
+
+    assert response.status_code == 422
+
+
+def test_predict_whitespace_message():
+    response = client.post(
+        "/predict",
+        json={
+            "message": "     "
+        }
+    )
+
+    assert response.status_code == 422
+
+
+def test_predict_strips_whitespace():
+    response = client.post(
+        "/predict",
+        json={
+            "message": "   Hey, are we still meeting at 5pm today?   "
+        }
+    )
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert data["message"] == "Hey, are we still meeting at 5pm today?"
+    assert data["label"] == "ham"
