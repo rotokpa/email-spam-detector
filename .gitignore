@@ -5,3 +5,5 @@ __pycache__/
 .DS_Store
 data/*
 .ipynb_checkpoints/
+# Fine-tuned transformer checkpoints
+notebooks/models/
